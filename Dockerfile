@@ -19,11 +19,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 COPY .env .
 
-# Copy templates and static directories
+# Copy templates directory
 COPY templates/ ./templates/
-COPY static/ ./static/
 
-# Create directories if they don't exist
+# Create directories if they don't exist (static will be created at runtime)
 RUN mkdir -p templates static
 
 # Expose port
