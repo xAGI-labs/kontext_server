@@ -105,11 +105,12 @@ async def generate_and_edit_image(img_prompt: str, editing_prompt: str):
             "black-forest-labs/flux-kontext-pro",
             input={
                 "prompt": editing_prompt,
-                "image": f"data:image/png;base64,{base_image_b64}",
+                "input_image": f"data:image/png;base64,{base_image_b64}",
                 "num_outputs": 1,
-                "aspect_ratio": "1:1",
+                "aspect_ratio": "match_input_image",
                 "output_format": "png",
-                "output_quality": 80
+                "output_quality": 80,
+                "safety_tolerance": 2
             }
         )
         
@@ -135,11 +136,12 @@ async def edit_image_from_url(img_url: str, editing_prompt: str):
             "black-forest-labs/flux-kontext-pro",
             input={
                 "prompt": editing_prompt,
-                "image": f"data:image/png;base64,{image_b64}",
+                "input_image": f"data:image/png;base64,{image_b64}",
                 "num_outputs": 1,
-                "aspect_ratio": "1:1",
+                "aspect_ratio": "match_input_image",
                 "output_format": "png",
-                "output_quality": 80
+                "output_quality": 80,
+                "safety_tolerance": 2
             }
         )
         
