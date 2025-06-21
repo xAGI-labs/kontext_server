@@ -62,14 +62,14 @@ async def generate_image(img_prompt: str):
                 "prompt": img_prompt,
                 "num_outputs": 1,
                 "aspect_ratio": "1:1",
-                "output_format": "webp",
+                "output_format": "png",
                 "output_quality": 80
             }
         )
         
         image_bytes = get_image_from_replicate_output(output)
         
-        return Response(content=image_bytes, media_type="image/webp")
+        return Response(content=image_bytes, media_type="image/png")
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Image generation failed: {str(e)}")
@@ -86,7 +86,7 @@ async def generate_and_edit_image(img_prompt: str, editing_prompt: str):
                 "prompt": img_prompt,
                 "num_outputs": 1,
                 "aspect_ratio": "1:1",
-                "output_format": "webp",
+                "output_format": "png",
                 "output_quality": 80
             }
         )
@@ -105,10 +105,10 @@ async def generate_and_edit_image(img_prompt: str, editing_prompt: str):
             "black-forest-labs/flux-kontext-pro",
             input={
                 "prompt": editing_prompt,
-                "image": f"data:image/webp;base64,{base_image_b64}",
+                "image": f"data:image/png;base64,{base_image_b64}",
                 "num_outputs": 1,
                 "aspect_ratio": "1:1",
-                "output_format": "webp",
+                "output_format": "png",
                 "output_quality": 80
             }
         )
@@ -116,7 +116,7 @@ async def generate_and_edit_image(img_prompt: str, editing_prompt: str):
         # Get edited image bytes
         image_bytes = get_image_from_replicate_output(edited_output)
         
-        return Response(content=image_bytes, media_type="image/webp")
+        return Response(content=image_bytes, media_type="image/png")
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Image generation and editing failed: {str(e)}")
@@ -135,10 +135,10 @@ async def edit_image_from_url(img_url: str, editing_prompt: str):
             "black-forest-labs/flux-kontext-pro",
             input={
                 "prompt": editing_prompt,
-                "image": f"data:image/webp;base64,{image_b64}",
+                "image": f"data:image/png;base64,{image_b64}",
                 "num_outputs": 1,
                 "aspect_ratio": "1:1",
-                "output_format": "webp",
+                "output_format": "png",
                 "output_quality": 80
             }
         )
@@ -146,7 +146,7 @@ async def edit_image_from_url(img_url: str, editing_prompt: str):
         # Get edited image bytes
         image_bytes = get_image_from_replicate_output(output)
         
-        return Response(content=image_bytes, media_type="image/webp")
+        return Response(content=image_bytes, media_type="image/png")
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Image editing failed: {str(e)}")

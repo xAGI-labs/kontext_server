@@ -17,8 +17,6 @@ A FastAPI-based image generation and editing service using Replicate's Flux Kont
 
 ## Running the Server
 
-### Option 1: Direct Python Execution
-
 ```bash
 python main.py
 ```
@@ -26,29 +24,6 @@ python main.py
 Or using uvicorn directly:
 ```bash
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-### Option 2: Docker Deployment (Recommended)
-
-#### Using Docker Compose (Easiest)
-```bash
-# Build and start the container
-docker-compose up --build
-
-# Run in detached mode
-docker-compose up -d --build
-
-# Stop the container
-docker-compose down
-```
-
-#### Using Docker directly
-```bash
-# Build the image
-docker build -t image-generation-api .
-
-# Run the container
-docker run -p 8000:8000 --env-file .env image-generation-api
 ```
 
 The server will start on `http://localhost:8000`
