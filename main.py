@@ -23,12 +23,35 @@ app = FastAPI(title="Image Generation API", description="API for image generatio
 
 replicate_client = replicate.Client(api_token=os.getenv("REPLICATE_API_TOKEN"))
 
-def download_image_as_base64(url: str) -> str:
-    """Download image from URL and convert to base64"""
+def download_image_as_base64(url: str) -> tuple[str, str]:
+    """Download image from URL and convert to base64, return (base64_data, mime_type)"""
     try:
         response = requests.get(url)
         response.raise_for_status()
-        return base64.b64encode(response.content).decode('utf-8')
+        
+        # Detect image format from content-type header or URL extension
+        content_type = response.headers.get('content-type', '').lower()
+        if 'jpeg' in content_type or 'jpg' in content_type:
+            mime_type = 'image/jpeg'
+        elif 'png' in content_type:
+            mime_type = 'image/png'
+        elif 'webp' in content_type:
+            mime_type = 'image/webp'
+        else:
+            # Fallback: detect from URL extension
+            url_lower = url.lower()
+            if url_lower.endswith(('.jpg', '.jpeg')):
+                mime_type = 'image/jpeg'
+            elif url_lower.endswith('.png'):
+                mime_type = 'image/png'
+            elif url_lower.endswith('.webp'):
+                mime_type = 'image/webp'
+            else:
+                # Default to jpeg if we can't detect
+                mime_type = 'image/jpeg'
+        
+        base64_data = base64.b64encode(response.content).decode('utf-8')
+        return base64_data, mime_type
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to download image: {str(e)}")
 
@@ -98,14 +121,14 @@ async def generate_and_edit_image(img_prompt: str, editing_prompt: str):
             base_image_url = base_output
         
         # Convert base image to base64 for editing
-        base_image_b64 = download_image_as_base64(base_image_url)
+        base_image_b64, base_mime_type = download_image_as_base64(base_image_url)
         
         # Edit the image with the editing prompt
         edited_output = replicate_client.run(
             "black-forest-labs/flux-kontext-pro",
             input={
                 "prompt": editing_prompt,
-                "input_image": f"data:image/png;base64,{base_image_b64}",
+                "input_image": f"data:{base_mime_type};base64,{base_image_b64}",
                 "num_outputs": 1,
                 "aspect_ratio": "match_input_image",
                 "output_format": "png",
@@ -129,14 +152,14 @@ async def edit_image_from_url(img_url: str, editing_prompt: str):
     """
     try:
         # Download and convert image to base64
-        image_b64 = download_image_as_base64(img_url)
+        image_b64, image_mime_type = download_image_as_base64(img_url)
         
         # Edit the image with the editing prompt
         output = replicate_client.run(
             "black-forest-labs/flux-kontext-pro",
             input={
                 "prompt": editing_prompt,
-                "input_image": f"data:image/png;base64,{image_b64}",
+                "input_image": f"data:{image_mime_type};base64,{image_b64}",
                 "num_outputs": 1,
                 "aspect_ratio": "match_input_image",
                 "output_format": "png",
