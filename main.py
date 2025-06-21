@@ -25,10 +25,13 @@ def load_env():
 
 load_env()
 
-app = FastAPI(title="Kontext Sprite Generator", description="Professional AI sprite generation using FLUX Kontext Pro")
+app = FastAPI(title="Image Generation API", description="API for image generation and editing using Replicate")
 
-# Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Create static directory if it doesn't exist and mount static files
+static_dir = "static"
+if not os.path.exists(static_dir):
+    os.makedirs(static_dir)
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 replicate_client = replicate.Client(api_token=os.getenv("REPLICATE_API_TOKEN"))
 
