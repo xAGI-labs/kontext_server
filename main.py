@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import Response
+from fastapi.responses import Response, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 import replicate
 import os
 import requests
@@ -10,7 +11,7 @@ from pydantic import BaseModel
 
 class AnimationRequest(BaseModel):
     image_url: str
-    frames: Optional[int] = 4
+    frames: Optional[int] = 8
 
 def load_env():
     try:
@@ -24,7 +25,10 @@ def load_env():
 
 load_env()
 
-app = FastAPI(title="Image Generation API", description="API for image generation and editing using Replicate")
+app = FastAPI(title="Kontext Sprite Generator", description="Professional AI sprite generation using FLUX Kontext Pro")
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 replicate_client = replicate.Client(api_token=os.getenv("REPLICATE_API_TOKEN"))
 
@@ -51,9 +55,19 @@ def get_image_from_replicate_output(output) -> bytes:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get image from Replicate: {str(e)}")
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def root():
-    return {"message": "Image Generation API is running"}
+    """Serve the landing page"""
+    try:
+        with open("templates/index.html", "r", encoding="utf-8") as f:
+            html_content = f.read()
+        return HTMLResponse(content=html_content)
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Landing page not found</h1><p>Please make sure templates/index.html exists</p>")
+
+@app.get("/health")
+async def health():
+    return {"message": "Kontext Sprite Generator API is running"}
 
 @app.get("/img/{img_prompt}")
 async def generate_image(img_prompt: str):
