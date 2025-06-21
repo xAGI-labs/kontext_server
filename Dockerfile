@@ -19,12 +19,19 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 COPY .env .
 
+# Copy templates and static directories
+COPY templates/ ./templates/
+COPY static/ ./static/
+
+# Create directories if they don't exist
+RUN mkdir -p templates static
+
 # Expose port
 EXPOSE 8000
 
 # Health check with longer start period for slow startup
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
-    CMD curl -f http://localhost:8000/ || exit 1
+    CMD curl -f http://localhost:8000/health || exit 1
 
 # Run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

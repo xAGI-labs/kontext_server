@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  image-api:
+  sprite-generator:
     build: .
     container_name: image-generation-api
     ports:
@@ -12,18 +12,20 @@ services:
       - .env
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
     volumes:
       - ./logs:/app/logs
+      - ./templates:/app/templates:ro
+      - ./static:/app/static:ro
     networks:
-      - image-api-network
+      - sprite-generator-network
 
 networks:
-  image-api-network:
+  sprite-generator-network:
     driver: bridge
 
 volumes:
