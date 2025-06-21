@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontext Sprite Generator - Professional Game Sprites with AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .loading {
+            display: none;
+        }
+        .result-container {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white">
+        <div class="container mx-auto px-4 py-6">
+            <nav class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Kontext Sprite Generator</h1>
+                <div class="space-x-4">
+                    <a href="#features" class="hover:text-gray-200">Features</a>
+                    <a href="#demo" class="hover:text-gray-200">Demo</a>
+                    <a href="#api" class="hover:text-gray-200">API</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-5xl font-bold mb-6">Professional AI Sprite Generator</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto">Create game sprites and animations 10x faster with FLUX Kontext Pro. Generate consistent characters, multiple poses, and smooth animations - no art skills required!</p>
+            <div class="flex justify-center space-x-4">
+                <button onclick="scrollToDemo()" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Start Creating</button>
+                <button onclick="scrollToAPI()" class="border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition">View API</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h3 class="text-4xl font-bold text-center mb-16 text-gray-800">Simple 3-Step Process</h3>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center card-hover bg-gray-50 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-purple-600">1</span>
+                    </div>
+                    <h4 class="text-xl font-semibold mb-4">Describe Character</h4>
+                    <p class="text-gray-600">Simply describe your character in text - "warrior with sword", "cute dragon", "robot mage"</p>
+                </div>
+                <div class="text-center card-hover bg-gray-50 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-purple-600">2</span>
+                    </div>
+                    <h4 class="text-xl font-semibold mb-4">Choose Generation Type</h4>
+                    <p class="text-gray-600">Single sprite, 6-pose set, or animation frames from existing image</p>
+                </div>
+                <div class="text-center card-hover bg-gray-50 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-purple-600">3</span>
+                    </div>
+                    <h4 class="text-xl font-semibold mb-4">Get Game-Ready Sprites</h4>
+                    <p class="text-gray-600">Download production-ready sprites with transparent backgrounds</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h3 class="text-4xl font-bold text-center mb-16 text-gray-800">Try Our Sprite Generator</h3>
+            
+            <!-- Single Sprite Generator -->
+            <div class="max-w-4xl mx-auto mb-16">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h4 class="text-2xl font-semibold mb-6 text-center">Single Sprite Generator</h4>
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <input type="text" id="singleSpriteInput" placeholder="Describe your character (e.g., warrior with sword)" 
+                               class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <button onclick="generateSingleSprite()" 
+                                class="bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 transition">
+                            Generate Sprite
+                        </button>
+                    </div>
+                    <div id="singleSpriteLoading" class="loading text-center py-8">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                        <p class="mt-2">Generating your sprite...</p>
+                    </div>
+                    <div id="singleSpriteResult" class="result-container mt-6 text-center">
+                        <img id="singleSpriteImage" class="mx-auto max-w-xs border rounded-lg shadow" alt="Generated sprite">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi Sprite Generator -->
+            <div class="max-w-4xl mx-auto mb-16">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h4 class="text-2xl font-semibold mb-6 text-center">6-Pose Sprite Set Generator</h4>
+                    <p class="text-center text-gray-600 mb-6">Generate idle, left facing, right facing, jumping, crouching, and attacking poses</p>
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <input type="text" id="multiSpriteInput" placeholder="Describe your character (e.g., ninja in black outfit)" 
+                               class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <button onclick="generateMultiSprite()" 
+                                class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition">
+                            Generate 6 Poses
+                        </button>
+                    </div>
+                    <div id="multiSpriteLoading" class="loading text-center py-8">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                        <p class="mt-2">Generating 6 sprite poses...</p>
+                    </div>
+                    <div id="multiSpriteResult" class="result-container mt-6">
+                        <div id="multiSpriteGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Animation Generator -->
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h4 class="text-2xl font-semibold mb-6 text-center">Animation Generator</h4>
+                    <p class="text-center text-gray-600 mb-6">Create animation frames from an existing character image</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Character Image URL</label>
+                            <input type="url" id="animationImageUrl" placeholder="https://example.com/character.png" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Animation Type</label>
+                            <select id="animationType" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="walk">Walk</option>
+                                <option value="run">Run</option>
+                                <option value="jump">Jump</option>
+                                <option value="attack">Attack</option>
+                                <option value="idle">Idle</option>
+                                <option value="death">Death</option>
+                                <option value="cast">Cast Spell</option>
+                                <option value="defend">Defend</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <button onclick="generateAnimation()" 
+                                class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition">
+                            Generate Animation
+                        </button>
+                    </div>
+                    <div id="animationLoading" class="loading text-center py-8">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                        <p class="mt-2">Generating animation frames...</p>
+                    </div>
+                    <div id="animationResult" class="result-container mt-6">
+                        <div id="animationFrames" class="flex flex-wrap justify-center gap-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Documentation -->
+    <section id="api" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h3 class="text-4xl font-bold text-center mb-16 text-gray-800">API Endpoints</h3>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-6 rounded-xl">
+                    <h4 class="text-xl font-semibold mb-4 text-purple-600">Single Sprite</h4>
+                    <code class="text-sm bg-gray-200 p-2 rounded block mb-2">GET /spritegen/{description}</code>
+                    <p class="text-gray-600">Generate a single pixel art sprite from description</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-xl">
+                    <h4 class="text-xl font-semibold mb-4 text-green-600">Multi Sprite</h4>
+                    <code class="text-sm bg-gray-200 p-2 rounded block mb-2">GET /spritegen-multi/{description}</code>
+                    <p class="text-gray-600">Generate 6 different poses of the same character</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-xl">
+                    <h4 class="text-xl font-semibold mb-4 text-blue-600">Animation</h4>
+                    <code class="text-sm bg-gray-200 p-2 rounded block mb-2">POST /animate/{type}</code>
+                    <p class="text-gray-600">Create animation frames from existing character image</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h4 class="text-2xl font-bold mb-4">Kontext Sprite Generator</h4>
+            <p class="text-gray-400 mb-4">Powered by FLUX Kontext Pro - Professional AI sprite generation</p>
+            <p class="text-sm text-gray-500">© 2024 Kontext Sprite Generator. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function scrollToDemo() {
+            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToAPI() {
+            document.getElementById('api').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function generateSingleSprite() {
+            const input = document.getElementById('singleSpriteInput');
+            const loading = document.getElementById('singleSpriteLoading');
+            const result = document.getElementById('singleSpriteResult');
+            const image = document.getElementById('singleSpriteImage');
+
+            if (!input.value.trim()) {
+                alert('Please enter a character description');
+                return;
+            }
+
+            loading.style.display = 'block';
+            result.style.display = 'none';
+
+            try {
+                const response = await fetch(`/spritegen/${encodeURIComponent(input.value)}`);
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const imageUrl = URL.createObjectURL(blob);
+                    image.src = imageUrl;
+                    result.style.display = 'block';
+                } else {
+                    alert('Failed to generate sprite');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        async function generateMultiSprite() {
+            const input = document.getElementById('multiSpriteInput');
+            const loading = document.getElementById('multiSpriteLoading');
+            const result = document.getElementById('multiSpriteResult');
+            const grid = document.getElementById('multiSpriteGrid');
+
+            if (!input.value.trim()) {
+                alert('Please enter a character description');
+                return;
+            }
+
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            grid.innerHTML = '';
+
+            try {
+                const response = await fetch(`/spritegen-multi/${encodeURIComponent(input.value)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    data.sprites.forEach(sprite => {
+                        if (sprite.image_data) {
+                            const div = document.createElement('div');
+                            div.className = 'text-center';
+                            div.innerHTML = `
+                                <img src="data:image/png;base64,${sprite.image_data}" 
+                                     class="w-full max-w-32 mx-auto border rounded-lg shadow mb-2" 
+                                     alt="${sprite.variation}">
+                                <p class="text-sm font-medium capitalize">${sprite.variation}</p>
+                            `;
+                            grid.appendChild(div);
+                        }
+                    });
+                    result.style.display = 'block';
+                } else {
+                    alert('Failed to generate sprites');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        async function generateAnimation() {
+            const imageUrl = document.getElementById('animationImageUrl');
+            const animationType = document.getElementById('animationType');
+            const loading = document.getElementById('animationLoading');
+            const result = document.getElementById('animationResult');
+            const frames = document.getElementById('animationFrames');
+
+            if (!imageUrl.value.trim()) {
+                alert('Please enter an image URL');
+                return;
+            }
+
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            frames.innerHTML = '';
+
+            try {
+                const response = await fetch(`/animate/${animationType.value}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image_url: imageUrl.value,
+                        frames: 4
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    data.sprites.forEach(sprite => {
+                        if (sprite.image_data) {
+                            const div = document.createElement('div');
+                            div.className = 'text-center';
+                            div.innerHTML = `
+                                <img src="data:image/png;base64,${sprite.image_data}" 
+                                     class="w-24 h-24 object-contain border rounded-lg shadow mb-2" 
+                                     alt="Frame ${sprite.frame}">
+                                <p class="text-xs font-medium">Frame ${sprite.frame}</p>
+                            `;
+                            frames.appendChild(div);
+                        }
+                    });
+                    result.style.display = 'block';
+                } else {
+                    const errorData = await response.json();
+                    alert('Failed to generate animation: ' + errorData.detail);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> 

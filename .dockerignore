@@ -24,17 +24,13 @@ coverage.xml
 .pytest_cache
 .hypothesis
 
-# Virtual environments
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# Documentation
+*.md
+!README.md
 
-# IDEs
-.vscode/
-.idea/
+# IDE
+.vscode
+.idea
 *.swp
 *.swo
 *~
@@ -48,15 +44,29 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
-# Documentation
-README.md
-*.md
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# Virtual environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # Docker
 Dockerfile
 docker-compose.yml
 .dockerignore
-
-# Logs
-logs/
-*.log
